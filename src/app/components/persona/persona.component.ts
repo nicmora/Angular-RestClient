@@ -15,7 +15,7 @@ export class PersonaComponent implements OnInit {
   personaSelected: Persona 
 
   constructor(private personaService: PersonaService) {
-    this.personas = []
+    this.personas = [];
     this.apellido = "";
     this.personaSelected = new Persona();
   }
@@ -30,21 +30,28 @@ export class PersonaComponent implements OnInit {
     } else {
       this.getAll();
     }
-    this.apellido = "";
   }
-
+  
   getAll() {
     this.personaService.getAll().subscribe(data => {
       this.personas = [];
       this.personas = data;
     });
   }
-
+  
   getByApellido() {
     this.personaService.getByApellido(this.apellido).subscribe(data => {
       this.personas = [];
       this.personas.push(data);
+      this.apellido = "";
     });
+  }
+
+  loadPersonaSelected(persona: Persona) {
+    this.personaSelected.id = persona.id;
+    this.personaSelected.nombre = persona.nombre;
+    this.personaSelected.apellido = persona.apellido;
+    this.personaSelected.fechaNacimiento = persona.fechaNacimiento;
   }
 
   createOrUpdate() {

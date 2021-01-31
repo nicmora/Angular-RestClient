@@ -9,11 +9,13 @@ import { FormsModule } from '@angular/forms';
 // Components
 import { AppComponent } from './app.component';
 import { PersonaComponent } from './components/persona/persona.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    PersonaComponent
+    PersonaComponent,
+    NavbarComponent
   ],
   imports: [
     BrowserModule,

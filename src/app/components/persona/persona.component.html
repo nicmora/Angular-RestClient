@@ -15,17 +15,17 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let p of personas">
+          <tr *ngFor="let persona of personas">
             <td>
-              <span class="badge badge-primary">{{ p.id }}</span>
+              <span class="badge badge-primary">{{ persona.id }}</span>
             </td>
-            <td>{{ p.nombre }}</td>
-            <td>{{ p.apellido }}</td>
-            <td>{{ p.edad }}</td>
-            <td>{{ p.fechaNacimiento }}</td>
+            <td>{{ persona.nombre }}</td>
+            <td>{{ persona.apellido }}</td>
+            <td>{{ persona.edad }}</td>
+            <td>{{ persona.fechaNacimiento }}</td>
             <td>
-              <button class="btn btn-warning btn-sm ml-2" (click)="personaSelected=p">Editar</button>
-              <button class="btn btn-danger btn-sm ml-2" (click)="delete(p.id)">Eliminar</button>
+              <button class="btn btn-warning btn-sm ml-2" (click)="loadPersonaSelected(persona)">Editar</button>
+              <button class="btn btn-danger btn-sm ml-2" (click)="delete(persona.id)">Eliminar</button>
             </td>
           </tr>
         </tbody>
