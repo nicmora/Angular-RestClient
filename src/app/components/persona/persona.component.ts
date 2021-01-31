@@ -47,4 +47,25 @@ export class PersonaComponent implements OnInit {
     });
   }
 
+  createOrUpdate() {
+    let id = this.personaSelected.id;
+    if(id != null && id > 0) {
+      this.personaService.update(id, this.personaSelected).subscribe(() => {
+        this.getAll();
+        this.personaSelected = new Persona();
+      });
+    } else {
+      this.personaService.create(this.personaSelected).subscribe(() => {
+        this.getAll();
+        this.personaSelected = new Persona();
+      });
+    }
+  }
+
+  delete(id: number) {
+    this.personaService.delete(id).subscribe(() => {
+      this.getAll();
+    });
+  }
+
 }

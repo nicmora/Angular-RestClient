@@ -23,17 +23,17 @@ export class PersonaService {
     return this.http.get<Persona>(`${baseURL}/search?apellido=${apellido}`);
   }
 
-  // create(persona) {
-  //   return this.http.post(baseURL, persona);
-  // }
+  create(persona: Persona) {
+    return this.http.post<Persona>(baseURL, persona);
+  }
 
-  // update(id, persona) {
-  //   return this.http.put(`${baseURL}/${id}`, persona);
-  // }
+  update(id: number, persona: Persona) {
+    return this.http.put<Persona>(`${baseURL}/${id}`, persona);
+  }
 
-  // delete(id) {
-  //   return this.http.delete(`${baseURL}/${id}`);
-  // }
+  delete(id: number) {
+    return this.http.delete(`${baseURL}/${id}`);
+  }
 
   // deleteAll() {
   //   return this.http.delete(baseURL);
