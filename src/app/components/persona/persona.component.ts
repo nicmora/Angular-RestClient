@@ -11,12 +11,12 @@ import { PersonaService } from '../../services/persona.service';
 export class PersonaComponent implements OnInit {
   
   personas: Persona[];
-  apellido: string;
+  id: number;
   personaSelected: Persona 
 
   constructor(private personaService: PersonaService) {
     this.personas = [];
-    this.apellido = "";
+    this.id = null;
     this.personaSelected = new Persona();
   }
 
@@ -25,8 +25,8 @@ export class PersonaComponent implements OnInit {
   }
 
   getPersona() {
-    if(this.apellido.length > 0) {
-      this.getByApellido();
+    if(this.id != null) {
+      this.getById();
     } else {
       this.getAll();
     }
@@ -39,18 +39,19 @@ export class PersonaComponent implements OnInit {
     });
   }
   
-  getByApellido() {
-    this.personaService.getByApellido(this.apellido).subscribe(data => {
+  getById() {
+    this.personaService.getById(this.id).subscribe(data => {
       this.personas = [];
       this.personas.push(data);
-      this.apellido = "";
+      this.id = null;
     });
   }
 
-  loadPersonaSelected(persona: Persona) {
+  loadForm(persona: Persona) {
     this.personaSelected.id = persona.id;
     this.personaSelected.nombre = persona.nombre;
     this.personaSelected.apellido = persona.apellido;
+    this.personaSelected.dni = persona.dni;
     this.personaSelected.fechaNacimiento = persona.fechaNacimiento;
   }
 

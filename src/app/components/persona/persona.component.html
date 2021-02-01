@@ -9,6 +9,7 @@
             <td>ID</td>
             <td>Nombre</td>
             <td>Apellido</td>
+            <td>DNI</td>
             <td>Edad</td>
             <td>Fecha Nac</td>
             <td>Acciones</td>
@@ -21,17 +22,18 @@
             </td>
             <td>{{ persona.nombre }}</td>
             <td>{{ persona.apellido }}</td>
+            <td>{{ persona.dni }}</td>
             <td>{{ persona.edad }}</td>
             <td>{{ persona.fechaNacimiento }}</td>
             <td>
-              <button class="btn btn-warning btn-sm ml-2" (click)="loadPersonaSelected(persona)">Editar</button>
+              <button class="btn btn-warning btn-sm ml-2" (click)="loadForm(persona)">Editar</button>
               <button class="btn btn-danger btn-sm ml-2" (click)="delete(persona.id)">Eliminar</button>
             </td>
           </tr>
         </tbody>
       </table>
       <div class="input-group w-50">
-        <input type="text" class="form-control" placeholder="Apellido" [(ngModel)]="apellido" />
+        <input type="number" class="form-control" placeholder="ID" [(ngModel)]="id" />
         <div class="input-group-append">
           <button class="btn btn-primary" type="button" (click)="getPersona()">
             Buscar
@@ -53,6 +55,10 @@
             <div class="form-group">
               <input type="text" class="form-control" placeholder="Apellido" [(ngModel)]="personaSelected.apellido"
                 name="apellido" />
+            </div>
+            <div class="form-group">
+              <input type="number" class="form-control" placeholder="DNI" [(ngModel)]="personaSelected.dni"
+                name="dni" />
             </div>
             <div class="form-group">
               <input type="text" class="form-control" placeholder="Fecha de Nacimiento [31/12/2000]"

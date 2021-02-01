@@ -2,6 +2,7 @@ export class Persona {
   id: number;
   nombre: string;
   apellido: string;
-  edad: number;
+  dni: number;
   fechaNacimiento: string;
+  edad: number;
 }

@@ -15,12 +15,8 @@ export class PersonaService {
     return this.http.get<Persona[]>(baseURL);
   }
 
-  // getById(id) {
-  //   return this.http.get(`${baseURL}/${id}`);
-  // }
-
-  getByApellido(apellido: String) {
-    return this.http.get<Persona>(`${baseURL}/search?apellido=${apellido}`);
+  getById(id: number) {
+    return this.http.get<Persona>(`${baseURL}/${id}`);
   }
 
   create(persona: Persona) {
