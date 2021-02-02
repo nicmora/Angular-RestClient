@@ -9,10 +9,9 @@ import { PersonaService } from '../../services/persona.service';
   styleUrls: ['./persona.component.css'],
 })
 export class PersonaComponent implements OnInit {
-  
   personas: Persona[];
   id: number;
-  personaSelected: Persona 
+  personaSelected: Persona;
 
   constructor(private personaService: PersonaService) {
     this.personas = [];
@@ -25,22 +24,22 @@ export class PersonaComponent implements OnInit {
   }
 
   getPersona() {
-    if(this.id != null) {
+    if (this.id != null) {
       this.getById();
     } else {
       this.getAll();
     }
   }
-  
+
   getAll() {
-    this.personaService.getAll().subscribe(data => {
+    this.personaService.getAll().subscribe((data) => {
       this.personas = [];
       this.personas = data;
     });
   }
-  
+
   getById() {
-    this.personaService.getById(this.id).subscribe(data => {
+    this.personaService.getById(this.id).subscribe((data) => {
       this.personas = [];
       this.personas.push(data);
       this.id = null;
@@ -57,7 +56,7 @@ export class PersonaComponent implements OnInit {
 
   createOrUpdate() {
     let id = this.personaSelected.id;
-    if(id != null && id > 0) {
+    if (id != null && id > 0) {
       this.personaService.update(id, this.personaSelected).subscribe(() => {
         this.getAll();
         this.personaSelected = new Persona();
@@ -75,5 +74,4 @@ export class PersonaComponent implements OnInit {
       this.getAll();
     });
   }
-
 }
