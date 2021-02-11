@@ -1,15 +1,18 @@
-<div class="container">
+<div class="container" id="main-container">
   <div class="row mt-5">
 
     <!-- Listado de Personas -->
-    <div class="col-lg-8 col-md-12">
+    <div class="col">
       <div class="input-group w-50 mt-2">
-        <input type="number" class="form-control" placeholder="ID" [(ngModel)]="id" />
+        <input type="number" class="form-control" placeholder="Persona ID" #personaId />
         <div class="input-group-append">
-          <button class="btn btn-primary" type="button" (click)="getPersona()">
+          <button class="btn btn-primary" type="button" (click)="getPersona(personaId.value)">
             Buscar
           </button>
         </div>
+        <button type="button" class="btn btn-info ml-3" data-toggle="modal" data-target="#createModal">
+          Crear
+        </button>
       </div>
       <table class="table table-hover mt-4" *ngIf="personas">
         <thead>
@@ -26,48 +29,118 @@
         <tbody>
           <tr *ngFor="let persona of personas">
             <td>
-              <span class="badge badge-primary">{{ persona.id }}</span>
+              <span class="badge badge-primary">{{ persona?.id }}</span>
             </td>
-            <td>{{ persona.nombre }}</td>
-            <td>{{ persona.apellido }}</td>
-            <td>{{ persona.dni }}</td>
-            <td>{{ persona.edad }}</td>
-            <td>{{ persona.fechaNacimiento }}</td>
+            <td>{{ persona?.nombre }}</td>
+            <td>{{ persona?.apellido }}</td>
+            <td>{{ persona?.dni }}</td>
+            <td>{{ persona?.edad }}</td>
+            <td>{{ persona?.fechaNacimiento }}</td>
             <td>
-              <button class="btn btn-warning btn-sm ml-2" (click)="loadForm(persona)">Editar</button>
-              <button class="btn btn-danger btn-sm ml-2" (click)="delete(persona.id)">Eliminar</button>
+              <button type="button" class="btn btn-warning btn-sm ml-2" (click)="onSelectPersona(persona)"
+                data-toggle="modal" data-target="#updateModal">
+                Editar
+              </button>
+              <button type="button" class="btn btn-danger btn-sm ml-2" (click)="onSelectPersona(persona)"
+                data-toggle="modal" data-target="#deleteModal">
+                Eliminar
+              </button>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <!-- Nuevo/Editor de Persona -->
-    <div class="col-lg-4 col-md-12">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Nueva Persona</h5>
-          <form>
-            <div class="form-group">
-              <input type="text" class="form-control" placeholder="Nombre" [(ngModel)]="personaSelected.nombre"
-                name="nombre" />
-            </div>
-            <div class="form-group">
-              <input type="text" class="form-control" placeholder="Apellido" [(ngModel)]="personaSelected.apellido"
-                name="apellido" />
-            </div>
-            <div class="form-group">
-              <input type="number" class="form-control" placeholder="DNI" [(ngModel)]="personaSelected.dni"
-                name="dni" />
-            </div>
-            <div class="form-group">
-              <input type="text" class="form-control" placeholder="Fecha de Nacimiento [31/12/2000]"
-                [(ngModel)]="personaSelected.fechaNacimiento" name="fechaNacimiento" />
-            </div>
-          </form>
-          <button class="btn btn-primary" type="button" (click)="createOrUpdate()">
-            Guardar
-          </button>
+    <!-- Create Modal -->
+    <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="createModalLabel">Nueva Persona</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form [formGroup]="personaForm" (ngSubmit)="onCreate()">
+              <div class="form-group">
+                <input type="text" class="form-control" formControlName="nombre" placeholder="Nombre" />
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-control" formControlName="apellido" placeholder="Apellido" />
+              </div>
+              <div class="form-group">
+                <input type="number" class="form-control" formControlName="dni" placeholder="DNI" required />
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-control" formControlName="fechaNacimiento"
+                  placeholder="Fecha de Nacimiento [31/12/2000]" />
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="createCloseBtn">Cerrar</button>
+                <button type="submit" class="btn btn-primary" [disabled]="personaForm.invalid">Guardar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Update Modal -->
+    <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="updateModalLabel">Editar Persona</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form [formGroup]="personaForm" (ngSubmit)="onUpdate()">
+              <div class="form-group">
+                <input type="hidden" class="form-control" formControlName="id" />
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-control" formControlName="nombre" placeholder="Nombre" />
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-control" formControlName="apellido" placeholder="Apellido" />
+              </div>
+              <div class="form-group">
+                <input type="number" class="form-control" formControlName="dni" placeholder="DNI" required />
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-control" formControlName="fechaNacimiento"
+                  placeholder="Fecha de Nacimiento [31/12/2000]" />
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="updateCloseBtn">Cerrar</button>
+                <button type="submit" class="btn btn-primary" [disabled]="personaForm.invalid">Guardar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deleteModalLabel">Eliminar Persona</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>¿Está seguro que quiere eliminar a la persona?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="deleteCloseBtn">Cancelar</button>
+            <button type="button" class="btn btn-primary" (click)="onDelete()">Aceptar</button>
+          </div>
         </div>
       </div>
     </div>

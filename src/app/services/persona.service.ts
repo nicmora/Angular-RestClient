@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 import { Persona } from '../models/persona';
 
@@ -11,23 +12,23 @@ export class PersonaService {
 
   constructor(private http: HttpClient) {}
 
-  getAll() {
+  getAll(): Observable<Persona[]> {
     return this.http.get<Persona[]>(this.baseURL);
   }
 
-  getById(id: number) {
+  getById(id: number): Observable<Persona> {
     return this.http.get<Persona>(`${this.baseURL}/${id}`);
   }
 
-  create(persona: Persona) {
-    return this.http.post<Persona>(this.baseURL, persona);
+  create(persona: Persona): Observable<Persona> {
+    return this.http.post<Persona>(`${this.baseURL}/create`, persona);
   }
 
-  update(id: number, persona: Persona) {
-    return this.http.put<Persona>(`${this.baseURL}/${id}`, persona);
+  update(id: number, persona: Persona): Observable<Persona> {
+    return this.http.put<Persona>(`${this.baseURL}/update/${id}`, persona);
   }
 
-  delete(id: number) {
-    return this.http.delete(`${this.baseURL}/${id}`);
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseURL}/delete/${id}`);
   }
 }

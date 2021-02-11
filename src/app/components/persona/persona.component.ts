@@ -1,4 +1,6 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 
 import { Persona } from '../../models/persona';
 import { PersonaService } from '../../services/persona.service';
@@ -10,66 +12,90 @@ import { PersonaService } from '../../services/persona.service';
 })
 export class PersonaComponent implements OnInit {
   personas: Persona[];
-  id: number;
-  personaSelected: Persona;
+  personaForm = new FormGroup({
+    id: new FormControl(''),
+    nombre: new FormControl(''),
+    apellido: new FormControl(''),
+    dni: new FormControl(''),
+    fechaNacimiento: new FormControl('')
+  });
 
-  constructor(private personaService: PersonaService) {
-    this.personas = [];
-    this.id = null;
-    this.personaSelected = new Persona();
-  }
+  constructor(private personaService: PersonaService) {}
 
   ngOnInit(): void {
     this.getAll();
   }
 
-  getPersona() {
-    if (this.id != null) {
-      this.getById();
+  getPersona(id: number): void {
+    if (id) {
+      this.getById(id);
     } else {
       this.getAll();
     }
   }
 
-  getAll() {
-    this.personaService.getAll().subscribe((data) => {
-      this.personas = [];
-      this.personas = data;
+  getAll(): void {
+    this.personaService.getAll().subscribe(
+      (response: Persona[]) => {
+        this.personas = response;
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.error.message);
+      }
+    );
+  }
+
+  getById(id: number): void {
+    this.personaService.getById(id).subscribe(
+      (response: Persona) => {
+        this.personas = [];
+        this.personas.push(response);
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.error.message);
+      }
+    );
+  }
+
+  onSelectPersona(persona: Persona): void {
+    this.personaForm = new FormGroup({
+      id: new FormControl(persona.id),
+      nombre: new FormControl(persona.nombre),
+      apellido: new FormControl(persona.apellido),
+      dni: new FormControl(persona.dni),
+      fechaNacimiento: new FormControl(persona.fechaNacimiento)
     });
   }
 
-  getById() {
-    this.personaService.getById(this.id).subscribe((data) => {
-      this.personas = [];
-      this.personas.push(data);
-      this.id = null;
-    });
-  }
-
-  loadForm(persona: Persona) {
-    this.personaSelected.id = persona.id;
-    this.personaSelected.nombre = persona.nombre;
-    this.personaSelected.apellido = persona.apellido;
-    this.personaSelected.dni = persona.dni;
-    this.personaSelected.fechaNacimiento = persona.fechaNacimiento;
-  }
-
-  createOrUpdate() {
-    let id = this.personaSelected.id;
-    if (id != null && id > 0) {
-      this.personaService.update(id, this.personaSelected).subscribe(() => {
+  onCreate(): void {
+    document.getElementById('createCloseBtn').click();
+    let persona = this.personaForm.value;
+    this.personaService.create(persona).subscribe(
+      (response: Persona) => {
         this.getAll();
-        this.personaSelected = new Persona();
-      });
-    } else {
-      this.personaService.create(this.personaSelected).subscribe(() => {
-        this.getAll();
-        this.personaSelected = new Persona();
-      });
-    }
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.error.message);
+      }
+    );
   }
 
-  delete(id: number) {
+  onUpdate(): void {
+    document.getElementById('updateCloseBtn').click();
+    let persona = this.personaForm.value;
+    this.personaService.update(persona.id, persona).subscribe(
+      (response: Persona) => {
+        this.getAll();
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.error.message);
+      }
+    );
+  }
+
+  onDelete(): void {
+    document.getElementById('deleteCloseBtn').click();
+    let id = this.personaForm.value.id;
     this.personaService.delete(id).subscribe(() => {
       this.getAll();
     });
